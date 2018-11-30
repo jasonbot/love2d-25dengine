@@ -8,6 +8,9 @@ function Editor:initialize()
     self.x = 0
     self.y = 0
     self.z = 0
+
+    self.camera = drawing.Camera:new()
+    self.camera:moveto(self.x, self.y, self.z, true)
 end
 
 function Editor:keyreleased(key)
@@ -25,11 +28,26 @@ function Editor:keyreleased(key)
         self.z = self.z + 1
     end
 
+    self.camera:moveto(self.x, self.y, self.z)
+
     print("KEYUP" .. tostring(key))
 end
 
+function Editor:update()
+    self.camera:update()
+end
+
 function Editor:draw()
-    local text = string.format("X: %s Y: %s Z: %s", self.x, self.y, self.z)
+    local text =
+        string.format(
+        "X: %s Y: %s Z: %s\nCamera X: %s Camera Y: %s Camera Z: %s",
+        self.x,
+        self.y,
+        self.z,
+        self.camera.x,
+        self.camera.y,
+        self.camera.z
+    )
     love.graphics.print(text, 0, 0)
 end
 
