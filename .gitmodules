@@ -1,0 +1,6 @@
+[submodule "middleclass"]
+	path = middleclass
+	url = git@github.com:kikito/middleclass.git
+[submodule "stateful.lua"]
+	path = stateful
+	url = git@github.com:kikito/stateful.lua.git
