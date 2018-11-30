@@ -10,7 +10,7 @@ function Editor:initialize()
     self.z = 0
 
     self.camera = drawing.Camera:new()
-    self.camera:moveto(self.x, self.y, self.z, true)
+    self.camera:moveto(self.x + 0.5, self.y + 0.5, self.z + 0.5, true)
 end
 
 function Editor:keyreleased(key)
@@ -28,7 +28,7 @@ function Editor:keyreleased(key)
         self.z = self.z + 1
     end
 
-    self.camera:moveto(self.x, self.y, self.z)
+    self.camera:moveto(self.x + 0.5, self.y + 0.5, self.z + 0.5)
 
     print("KEYUP" .. tostring(key))
 end
