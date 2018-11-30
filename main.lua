@@ -1,7 +1,9 @@
 local editor = require "editor"
 local gameState = nil
+--local profiler = require "profiler"
 
 function love.load()
+    --profiler:activate()
     gameState = editor.Editor:new()
 end
 
@@ -26,6 +28,8 @@ end
 function love.keyreleased(key)
     if key == "escape" then
         love.event.quit()
+        --profiler:deactivate()
+        --profiler:print_results()
         return
     end
 
