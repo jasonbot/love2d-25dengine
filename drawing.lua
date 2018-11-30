@@ -2,72 +2,29 @@ local class = require("middleclass/middleclass")
 
 local Camera = class("Camera")
 
-local ttostring = nil
-
-local function val_to_str(v)
-    if "string" == type(v) then
-        v = string.gsub(v, "\n", "\\n")
-        if string.match(string.gsub(v, '[^\'"]', ""), '^"+$') then
-            return "'" .. v .. "'"
-        end
-        return '"' .. string.gsub(v, '"', '\\"') .. '"'
-    else
-        return "table" == type(v) and ttostring(v) or ("number" == type(v) and string.format("%.3f", v) or tostring(v))
-    end
-end
-
-local function key_to_str(k)
-    if "string" == type(k) and string.match(k, "^[_%a][_%a%d]*$") then
-        return k
-    else
-        return "[" .. val_to_str(k) .. "]"
-    end
-end
-
-ttostring = function(tbl)
-    local result, done = {}, {}
-    for k, v in ipairs(tbl) do
-        table.insert(result, val_to_str(v))
-        done[k] = true
-    end
-    for k, v in pairs(tbl) do
-        if not done[k] then
-            table.insert(result, key_to_str(k) .. "=" .. val_to_str(v))
-        end
-    end
-    return "{" .. table.concat(result, ",") .. "}"
-end
-
 function Camera:initialize()
     self.x, self.y, self.z = 0.0, 0.0, 0.0
     self.targetX, self.targetY, self.targetZ = 0.0, 0.0, 0.0
-    self.unitwidth = 80
+    self.unitwidth = 16
     self:resetdisplaymetrics()
 end
 
 function Camera:resetdisplaymetrics()
     self.screenwidth, self.screenheight, self.screenflags = love.window.getMode()
-    self.centerx, self.centery = self.screenwidth / 2.0, self.screenheight / 3.0
+    self.centerx, self.centery = self.screenwidth / 2.0, self.screenheight / 2.0
     self.unitdimensions = self.screenwidth / self.unitwidth
 end
 
+-- forshortening formula
 function _multiplier(z, width)
-    -- f(x) = mx + b
-    -- f(0) = 1
-    -- f(-width) = 0.5
-    -- Solve eqn
-    -- b = 1
-    -- m*-width = -0.5
-    -- m = 1/(2*width)
-    -- return ((1.0 / (2.0 * width)) * z) + 1.0
     if z <= (-width * 2) then
         return nil
     elseif z >= (width * 2) then
         return nil
     end
-    -- return math.pow(2, ((width - z) / (width * 2)))
-    -- return math.pow(4, (width - z) / (width * 2))
-    return math.pow(4, (width - z) / width)
+    -- return ((1.0 / (2.0 * width)) * z) + 1.0
+    return math.pow(2, ((z - width) / (width * 2)))
+    -- return math.pow(4, (z - width) / width)
 end
 
 function Camera:pointonscreen(x, y, z)
@@ -101,17 +58,12 @@ function Camera:drawcube(x, y, z)
         self:pointonscreen(x, y + 1, z + 1),
         self:pointonscreen(x + 1, y + 1, z + 1)
 
-    if not (c1[2] and c2[2] and c3[2] and c4[2] and c5[2] and c6[2] and c7[2] and c8[2]) then
+    if not (c1[2] or c2[2] or c3[2] or c4[2] or c5[2] or c6[2] or c7[2] or c8[2]) then
         return
     end
 
-    --love.graphics.print(val_to_str(c1), 0, 40)
-    --love.graphics.print(val_to_str(c1[1]), 0, 80)
     -- back face
-    love.graphics.line(c1[1], c1[2], c2[1], c2[2])
-    love.graphics.line(c2[1], c2[2], c4[1], c4[2])
-    love.graphics.line(c4[1], c4[2], c3[1], c3[2])
-    love.graphics.line(c3[1], c3[2], c1[1], c1[2])
+    love.graphics.line(c1[1], c1[2], c2[1], c2[2], c4[1], c4[2], c3[1], c3[2], c1[1], c1[2])
 
     -- connecting legs
     love.graphics.line(c1[1], c1[2], c5[1], c5[2])
@@ -120,10 +72,7 @@ function Camera:drawcube(x, y, z)
     love.graphics.line(c3[1], c3[2], c7[1], c7[2])
 
     -- front face
-    love.graphics.line(c5[1], c5[2], c6[1], c6[2])
-    love.graphics.line(c6[1], c6[2], c8[1], c8[2])
-    love.graphics.line(c8[1], c8[2], c7[1], c7[2])
-    love.graphics.line(c7[1], c7[2], c5[1], c5[2])
+    love.graphics.line(c5[1], c5[2], c6[1], c6[2], c8[1], c8[2], c7[1], c7[2], c5[1], c5[2])
 end
 
 function Camera:moveto(x, y, z, force)
@@ -163,13 +112,15 @@ function Camera:update()
         self.y = self.targetY
     end
 
-    if self.z > self.targetZ then
-        self.z = self.z - 0.1
-    elseif self.z < self.targetZ then
-        self.z = self.z + 0.1
+    if self.z ~= self.targetZ then
+        local diff = (self.targetZ - self.z) / 12.0
+        if math.abs(diff) < 0.05 then
+            diff = 0.05 * (math.abs(diff) / diff)
+        end
+        self.z = self.z + diff
     end
 
-    if math.abs(self.z - self.targetZ) < 0.1 then
+    if math.abs(self.z - self.targetZ) < 0.05 then
         self.z = self.targetZ
     end
 end

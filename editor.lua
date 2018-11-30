@@ -19,13 +19,13 @@ function Editor:keyreleased(key)
     elseif key == "right" then
         self.x = self.x + 1
     elseif key == "up" then
-        self.y = self.y + 1
-    elseif key == "down" then
-        self.y = self.y - 1
-    elseif key == "a" then
-        self.z = self.z - 1
-    elseif key == "z" then
         self.z = self.z + 1
+    elseif key == "down" then
+        self.z = self.z - 1
+    elseif key == "a" then
+        self.y = self.y - 1
+    elseif key == "z" then
+        self.y = self.y + 1
     end
 
     self.camera:moveto(self.x + 0.5, self.y + 0.5, self.z + 0.5)
@@ -55,9 +55,9 @@ function Editor:draw()
     self.camera:drawcube(self.camera.x - 0.5, self.camera.y - 0.5, self.camera.z - 0.5)
 
     love.graphics.setLineWidth(1.0, "smooth")
-    love.graphics.setColor(255, 100, 100, 45)
-    for x = 1, 100 do
-        for z = 1, 10 do
+    for x = 1, 16 do
+        for z = 1, 16 do
+            love.graphics.setColor(1, x / 16, z / 16)
             self.camera:drawcube(0 + x, 0, 0 + z)
         end
     end
