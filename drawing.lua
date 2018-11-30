@@ -78,7 +78,9 @@ end
 function Camera:moveto(x, y, z, force)
     self.targetX = x
     self.targetY = y
-    self.targetZ = z
+    if z ~= nil then
+        self.targetZ = z
+    end
 
     if force == true then
         self.x = self.targetX

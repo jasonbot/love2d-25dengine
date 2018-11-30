@@ -37,3 +37,9 @@ function love.keyreleased(key)
         gameState:keyreleased(key)
     end
 end
+
+function love.resize(w, h)
+    if gameState ~= nil then
+        gameState:resize(w, h)
+    end
+end

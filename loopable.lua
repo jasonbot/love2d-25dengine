@@ -18,4 +18,7 @@ function Loopable:keyreleased(key)
     print("key released " .. tostring(key))
 end
 
+function Loopable:resize(w, h)
+end
+
 return {Loopable = Loopable}

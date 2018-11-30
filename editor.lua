@@ -26,6 +26,8 @@ function Editor:keyreleased(key)
         self.y = self.y - 1
     elseif key == "z" then
         self.y = self.y + 1
+    elseif key == "f" then
+        love.window.setFullscreen(not love.window.getFullscreen(), "desktop")
     end
 
     self.camera:moveto(self.x + 0.5, self.y + 0.5, self.z + 0.5)
@@ -35,6 +37,10 @@ end
 
 function Editor:update()
     self.camera:update()
+end
+
+function Editor:resize(w, h)
+    self.camera:resetdisplaymetrics()
 end
 
 function Editor:draw()
