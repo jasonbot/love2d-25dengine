@@ -10,6 +10,7 @@ function Editor:initialize()
     self.z = 0
 
     self.camera = drawing.Camera:new()
+    self.y = math.ceil(self.camera.y) - 0.5
     self.camera:moveto(self.x + 0.5, self.y + 0.5, self.z + 0.5, true)
 end
 
@@ -41,6 +42,7 @@ end
 
 function Editor:resize(w, h)
     self.camera:resetdisplaymetrics()
+    self.y = math.ceil(self.camera.targetY) - 0.5
 end
 
 function Editor:draw()
@@ -66,6 +68,11 @@ function Editor:draw()
             love.graphics.setColor(1, x / 16, z / 16)
             self.camera:drawcube(0 + x, 0, 0 + z)
         end
+    end
+
+    love.graphics.setColor(0, 1, 0)
+    for y = 2, 16 do
+        self.camera:drawcube(0, y, 0)
     end
 end
 

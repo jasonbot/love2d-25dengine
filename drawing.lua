@@ -13,6 +13,13 @@ function Camera:resetdisplaymetrics()
     self.screenwidth, self.screenheight, self.screenflags = love.window.getMode()
     self.centerx, self.centery = self.screenwidth / 2.0, self.screenheight / 2.0
     self.unitdimensions = self.screenwidth / self.unitwidth
+
+    self:moveto(self.x, self:getFloorY(), nil, true)
+end
+
+function Camera:getFloorY()
+    local tiles = (self.screenheight / self.unitdimensions)
+    return tiles / 2.0
 end
 
 -- forshortening formula
@@ -77,7 +84,11 @@ end
 
 function Camera:moveto(x, y, z, force)
     self.targetX = x
-    self.targetY = y
+
+    if y ~= nil then
+        self.targetY = y
+    end
+
     if z ~= nil then
         self.targetZ = z
     end
