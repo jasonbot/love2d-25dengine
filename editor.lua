@@ -48,13 +48,14 @@ end
 function Editor:draw()
     local text =
         string.format(
-        "X: %s Y: %s Z: %s\nCamera X: %s Camera Y: %s Camera Z: %s",
+        "X: %s Y: %s Z: %s\nCamera X: %s Camera Y: %s Camera Z: %s\n%s FPS",
         self.x,
         self.y,
         self.z,
         self.camera.x,
         self.camera.y,
-        self.camera.z
+        self.camera.z,
+        love.timer.getFPS()
     )
     love.graphics.print(text, 0, 0)
     love.graphics.setLineWidth(2.0)
@@ -63,16 +64,20 @@ function Editor:draw()
     self.camera:drawcube(self.camera.x - 0.5, self.camera.y - 0.5, self.camera.z - 0.5)
 
     love.graphics.setLineWidth(1.0, "smooth")
-    for x = 1, 16 do
-        for z = 1, 16 do
+    for x = 0, self.camera.unitwidth - 1 do
+        for z = 0, self.camera.unitwidth - 1 do
             love.graphics.setColor(1, x / 16, z / 16)
             self.camera:drawcube(0 + x, 0, 0 + z)
+            self.camera:drawcube(0 + x, self.camera.unitwidth - 1, 0 + z)
         end
     end
 
     love.graphics.setColor(0, 1, 0)
-    for y = 2, 16 do
+    for y = 1, self.camera.unitwidth - 2 do
         self.camera:drawcube(0, y, 0)
+        self.camera:drawcube(self.camera.unitwidth - 1, y, 0)
+        self.camera:drawcube(0, y, self.camera.unitwidth - 1)
+        self.camera:drawcube(self.camera.unitwidth - 1, y, self.camera.unitwidth - 1)
     end
 end
 
