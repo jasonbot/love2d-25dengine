@@ -11,7 +11,7 @@ end
 
 function Camera:resetdisplaymetrics()
     self.screenwidth, self.screenheight, self.screenflags = love.window.getMode()
-    self.centerx, self.centery = self.screenwidth / 2.0, self.screenheight / self.unitwidth
+    self.centerx, self.centery = self.screenwidth / 2.0, self.screenheight / self.unitwidth -- / 2.0
     self.unitdimensions = self.screenwidth / self.unitwidth
 
     self:moveto(self.x, self:getFloorY(), nil, true)
@@ -19,6 +19,7 @@ end
 
 function Camera:getFloorY()
     local tiles = (self.screenheight / self.unitdimensions)
+    -- return tiles / 2.0
     return tiles
 end
 
