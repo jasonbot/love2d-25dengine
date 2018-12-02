@@ -20,13 +20,13 @@ function Editor:keyreleased(key)
     elseif key == "right" then
         self.x = self.x + 1
     elseif key == "up" then
-        self.z = self.z + 1
-    elseif key == "down" then
         self.z = self.z - 1
+    elseif key == "down" then
+        self.z = self.z + 1
     elseif key == "a" then
-        self.y = self.y - 1
-    elseif key == "z" then
         self.y = self.y + 1
+    elseif key == "z" then
+        self.y = self.y - 1
     elseif key == "f" then
         love.window.setFullscreen(not love.window.getFullscreen(), "desktop")
     end
@@ -59,11 +59,11 @@ function Editor:draw()
     )
     love.graphics.print(text, 0, 0)
     love.graphics.setLineWidth(2.0)
-    love.graphics.setColor(255, 255, 255, 25)
+    love.graphics.setColor(16, 16, 16, 12)
 
     self.camera:drawcube(self.camera.x - 0.5, self.camera.y - 0.5, self.camera.z - 0.5)
 
-    love.graphics.setLineWidth(1.0, "smooth")
+    love.graphics.setLineWidth(1.0)
     for x = 0, self.camera.unitwidth - 1 do
         for z = 0, self.camera.unitwidth - 1 do
             love.graphics.setColor(1, x / 16, z / 16)
