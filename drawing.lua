@@ -29,15 +29,29 @@ function Camera:getFloorY()
 end
 
 -- forshortening formula
+function __multiplier(z, width)
+    -- return ((1.0 / (2.0 * width)) * z) + 1.0
+    return _round(math.pow(2, ((z - width) / (width * 2))), 3)
+    -- return math.pow(4, (z - width) / width)
+end
+
+local _multiplier_cache = {}
+
 function _multiplier(z, width)
     if z <= (-width * 2) then
         return nil
     elseif z >= (width * 2) then
         return nil
     end
-    -- return ((1.0 / (2.0 * width)) * z) + 1.0
-    return _round(math.pow(2, ((z - width) / (width * 2))), 3)
-    -- return math.pow(4, (z - width) / width)
+
+    local key = tostring(_round(z, 3)) + ";" + tostring(_round(width, 1))
+    local lookup = _multiplier_cache[key]
+    if lookup == nil then
+        lookup = __multiplier(z, width)
+        _multiplier_cache[key] = lookup
+    end
+
+    return lookup
 end
 
 function Camera:pointonscreen(x, y, z)
