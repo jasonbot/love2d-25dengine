@@ -10,7 +10,7 @@ end
 function Camera:initialize()
     self.x, self.y, self.z = 0.0, 0.0, 0.0
     self.targetX, self.targetY, self.targetZ = 0.0, 0.0, 0.0
-    self.unitwidth = 4
+    self.unitwidth = 24
     self:resetdisplaymetrics()
 end
 
