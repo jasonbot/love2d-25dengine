@@ -36,7 +36,7 @@ function _multiplier(z, width)
         return nil
     end
     -- return ((1.0 / (2.0 * width)) * z) + 1.0
-    return _round(math.pow(2, ((z - width) / (width * 2))), 2)
+    return _round(math.pow(2, ((z - width) / (width * 2))), 3)
     -- return math.pow(4, (z - width) / width)
 end
 
