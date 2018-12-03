@@ -10,13 +10,13 @@ end
 function Camera:initialize()
     self.x, self.y, self.z = 0.0, 0.0, 0.0
     self.targetX, self.targetY, self.targetZ = 0.0, 0.0, 0.0
-    self.unitwidth = 24
+    self.unitwidth = 12
     self:resetdisplaymetrics()
 end
 
 function Camera:resetdisplaymetrics()
     self.screenwidth, self.screenheight, self.screenflags = love.window.getMode()
-    self.centerx, self.centery = self.screenwidth / 2.0, self.screenheight / 2.0 -- / self.unitwidth
+    self.centerx, self.centery = self.screenwidth / 2.0, self.screenheight / (self.unitwidth / 2.0) -- /2.0
     self.unitdimensions = self.screenwidth / self.unitwidth
 
     self:moveto(self.x, self:getFloorY(), nil, true)
@@ -25,7 +25,7 @@ end
 function Camera:getFloorY()
     local tiles = (self.screenheight / self.unitdimensions)
     -- return tiles / 2.0
-    return tiles - 1.0
+    return tiles - 2.0
 end
 
 -- forshortening formula
@@ -91,30 +91,30 @@ function Camera:drawcube(x, y, z)
 
     -- left face
     if self.x < x then
-        love.graphics.setColor(255, 0, 255, 128)
+        love.graphics.setColor(0.75, 0.75, 0.75, 1)
         love.graphics.polygon("fill", c1[1], c1[2], c5[1], c5[2], c7[1], c7[2], c3[1], c3[2], c1[1], c1[2])
     end
 
     -- right face
     if self.x > x then
-        love.graphics.setColor(255, 255, 0, 128)
+        love.graphics.setColor(0.33, 0.33, 0.33, 1)
         love.graphics.polygon("fill", c2[1], c2[2], c6[1], c6[2], c8[1], c8[2], c4[1], c4[2], c2[1], c2[2])
     end
 
     -- top face
     if self.y < y - 1 then
-        love.graphics.setColor(0, 255, 255, 128)
+        love.graphics.setColor(0.25, 0.25, 0.25, 1)
         love.graphics.polygon("fill", c3[1], c3[2], c4[1], c4[2], c8[1], c8[2], c7[1], c7[2], c3[1], c3[2])
     end
 
     -- bottom face
     if self.y > y then
-        love.graphics.setColor(128, 128, 128, 128)
+        love.graphics.setColor(0.5, 0.5, 0.5, 1)
         love.graphics.polygon("fill", c1[1], c1[2], c2[1], c2[2], c6[1], c6[2], c5[1], c5[2], c1[1], c1[2])
     end
 
     -- front face
-    love.graphics.setColor(200, 200, 255, 128)
+    love.graphics.setColor(1, 1, 1, 1)
     love.graphics.polygon("fill", c5[1], c5[2], c6[1], c6[2], c8[1], c8[2], c7[1], c7[2], c5[1], c5[2])
 end
 
