@@ -2,6 +2,11 @@ local class = require("middleclass/middleclass")
 
 local Camera = class("Camera")
 
+function _round(num, numDecimalPlaces)
+    local mult = 10 ^ (numDecimalPlaces or 0)
+    return math.floor(num * mult + 0.5) / mult
+end
+
 function Camera:initialize()
     self.x, self.y, self.z = 0.0, 0.0, 0.0
     self.targetX, self.targetY, self.targetZ = 0.0, 0.0, 0.0
@@ -31,7 +36,7 @@ function _multiplier(z, width)
         return nil
     end
     -- return ((1.0 / (2.0 * width)) * z) + 1.0
-    return math.pow(2, ((z - width) / (width * 2)))
+    return _round(math.pow(2, ((z - width) / (width * 2))), 2)
     -- return math.pow(4, (z - width) / width)
 end
 
