@@ -1,5 +1,5 @@
 local class = require("middleclass/middleclass")
-local drawing = require("drawing")
+local projection = require("projection")
 local loopable = require("loopable")
 
 local Editor = class("Editor", loopable.Loopable)
@@ -24,7 +24,7 @@ function Editor:initialize()
     self.tile = love.graphics.newImage("tile.png")
     self.mesh:setTexture(self.tile)
 
-    self.camera = drawing.Camera:new()
+    self.camera = projection.Camera:new()
     self.y = math.ceil(self.camera.y) - 0.5
     self.camera:moveto(self.x + 0.5, self.y + 0.5, self.z + 0.5, true)
 end
