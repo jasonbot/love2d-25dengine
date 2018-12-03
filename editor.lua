@@ -9,21 +9,6 @@ function Editor:initialize()
     self.y = 0
     self.z = 0
 
-    self.mesh =
-        love.graphics.newMesh(
-        {
-            {0, 0, 0, 0},
-            {128, 0, 1, 0},
-            {128, 128, 1, 1},
-            {0, 128, 0, 1}
-        },
-        "fan",
-        "stream"
-    )
-    print(self.mesh)
-    self.tile = love.graphics.newImage("tile.png")
-    self.mesh:setTexture(self.tile)
-
     self.camera = projection.Camera:new()
     self.y = math.ceil(self.camera.y) - 0.5
     self.camera:moveto(self.x + 0.5, self.y + 0.5, self.z + 0.5, true)
@@ -60,7 +45,6 @@ end
 
 function Editor:draw()
     love.graphics.setColor(1, 1, 1)
-    love.graphics.draw(self.mesh)
 
     local text =
         string.format(
