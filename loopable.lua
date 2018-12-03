@@ -11,11 +11,9 @@ function Loopable:draw()
 end
 
 function Loopable:keypressed(key)
-    print("key pressed " .. tostring(key))
 end
 
 function Loopable:keyreleased(key)
-    print("key released " .. tostring(key))
 end
 
 function Loopable:resize(w, h)

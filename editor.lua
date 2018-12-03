@@ -47,8 +47,6 @@ function Editor:keyreleased(key)
     end
 
     self.camera:moveto(self.x + 0.5, self.y + 0.5, self.z + 0.5)
-
-    print("KEYUP" .. tostring(key))
 end
 
 function Editor:update()
