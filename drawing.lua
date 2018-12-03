@@ -10,13 +10,13 @@ end
 function Camera:initialize()
     self.x, self.y, self.z = 0.0, 0.0, 0.0
     self.targetX, self.targetY, self.targetZ = 0.0, 0.0, 0.0
-    self.unitwidth = 24
+    self.unitwidth = 4
     self:resetdisplaymetrics()
 end
 
 function Camera:resetdisplaymetrics()
     self.screenwidth, self.screenheight, self.screenflags = love.window.getMode()
-    self.centerx, self.centery = self.screenwidth / 2.0, self.screenheight / self.unitwidth -- / 2.0
+    self.centerx, self.centery = self.screenwidth / 2.0, self.screenheight / 2.0 -- / self.unitwidth
     self.unitdimensions = self.screenwidth / self.unitwidth
 
     self:moveto(self.x, self:getFloorY(), nil, true)
@@ -25,7 +25,7 @@ end
 function Camera:getFloorY()
     local tiles = (self.screenheight / self.unitdimensions)
     -- return tiles / 2.0
-    return tiles
+    return tiles - 1.0
 end
 
 -- forshortening formula
@@ -44,7 +44,7 @@ function _multiplier(z, width)
         return nil
     end
 
-    local key = tostring(_round(z, 3)) + ";" + tostring(_round(width, 1))
+    local key = tostring(_round(z, 3)) .. ";" .. tostring(_round(width, 1))
     local lookup = _multiplier_cache[key]
     if lookup == nil then
         lookup = __multiplier(z, width)
@@ -78,28 +78,44 @@ function Camera:drawcube(x, y, z)
     local c1, c2, c3, c4, c5, c6, c7, c8 =
         self:pointonscreen(x, y, z),
         self:pointonscreen(x + 1, y, z),
-        self:pointonscreen(x, y + 1, z),
-        self:pointonscreen(x + 1, y + 1, z),
+        self:pointonscreen(x, y - 1, z),
+        self:pointonscreen(x + 1, y - 1, z),
         self:pointonscreen(x, y, z + 1),
         self:pointonscreen(x + 1, y, z + 1),
-        self:pointonscreen(x, y + 1, z + 1),
-        self:pointonscreen(x + 1, y + 1, z + 1)
+        self:pointonscreen(x, y - 1, z + 1),
+        self:pointonscreen(x + 1, y - 1, z + 1)
 
     if not (c1[2] or c2[2] or c3[2] or c4[2] or c5[2] or c6[2] or c7[2] or c8[2]) then
         return
     end
 
-    -- back face
-    love.graphics.line(c1[1], c1[2], c2[1], c2[2], c4[1], c4[2], c3[1], c3[2], c1[1], c1[2])
+    -- left face
+    if self.x < x then
+        love.graphics.setColor(255, 0, 255, 128)
+        love.graphics.polygon("fill", c1[1], c1[2], c5[1], c5[2], c7[1], c7[2], c3[1], c3[2], c1[1], c1[2])
+    end
 
-    -- connecting legs
-    love.graphics.line(c1[1], c1[2], c5[1], c5[2])
-    love.graphics.line(c2[1], c2[2], c6[1], c6[2])
-    love.graphics.line(c4[1], c4[2], c8[1], c8[2])
-    love.graphics.line(c3[1], c3[2], c7[1], c7[2])
+    -- right face
+    if self.x > x then
+        love.graphics.setColor(255, 255, 0, 128)
+        love.graphics.polygon("fill", c2[1], c2[2], c6[1], c6[2], c8[1], c8[2], c4[1], c4[2], c2[1], c2[2])
+    end
+
+    -- top face
+    if self.y < y - 1 then
+        love.graphics.setColor(0, 255, 255, 128)
+        love.graphics.polygon("fill", c3[1], c3[2], c4[1], c4[2], c8[1], c8[2], c7[1], c7[2], c3[1], c3[2])
+    end
+
+    -- bottom face
+    if self.y > y then
+        love.graphics.setColor(128, 128, 128, 128)
+        love.graphics.polygon("fill", c1[1], c1[2], c2[1], c2[2], c6[1], c6[2], c5[1], c5[2], c1[1], c1[2])
+    end
 
     -- front face
-    love.graphics.line(c5[1], c5[2], c6[1], c6[2], c8[1], c8[2], c7[1], c7[2], c5[1], c5[2])
+    love.graphics.setColor(200, 200, 255, 128)
+    love.graphics.polygon("fill", c5[1], c5[2], c6[1], c6[2], c8[1], c8[2], c7[1], c7[2], c5[1], c5[2])
 end
 
 function Camera:moveto(x, y, z, force)
